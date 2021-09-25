@@ -15,9 +15,14 @@ actual class FlowChain(
     applicationContext: Context
 ) {
 
-    private val securityHelper by lazy { SecurityHelper(applicationContext) }
-    private val dataStore by lazy { applicationContext.dataStore }
+    private val dataStore by lazy {
+        applicationContext.dataStore
+    }
+    private val securityHelper by lazy {
+        SecurityHelper(applicationContext)
+    }
 
+    @Throws(SecurityException::class)
     actual fun getValue(
         key: String,
         defaultValue: String?
@@ -29,6 +34,7 @@ actual class FlowChain(
         }
     }
 
+    @Throws(SecurityException::class)
     actual suspend fun setValue(
         key: String,
         value: String

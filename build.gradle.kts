@@ -1,8 +1,12 @@
 plugins {
     kotlin("multiplatform") version Libs.Kotlin.version
     id("com.android.library")
+    kotlin("native.cocoapods") version Libs.Kotlin.version
     id("maven-publish")
 }
+
+// CocoaPods requires the podspec to have a version.
+version = "1.0"
 
 group = Application.group
 version = Application.version
@@ -19,8 +23,20 @@ kotlin {
     iosX64("ios") {
         binaries {
             framework {
-                baseName = "library"
+                baseName = "FlowChain"
             }
+        }
+    }
+//    ios()
+    cocoapods {
+        framework {
+            ios.deploymentTarget = "14.1"
+            summary = "Some description for a Kotlin/Native module"
+            homepage = "Link to a Kotlin/Native module homepage"
+            baseName = "FlowChain"
+        }
+        pod("Tink") {
+            version = "~> 1.6.1"
         }
     }
     sourceSets {
@@ -44,6 +60,8 @@ kotlin {
         val androidTest by getting {
             dependencies {
                 implementation(Libs.JUnit.junit)
+                implementation(Libs.RoboElectrics.robolectric)
+                implementation(Libs.AndroidXTest.core)
             }
         }
         val iosMain by getting
@@ -52,10 +70,10 @@ kotlin {
 }
 
 android {
-    compileSdkVersion(Application.compileSdk)
+    compileSdk = Application.compileSdk
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdkVersion(Application.minSdk)
-        targetSdkVersion(Application.targetSdk)
+        minSdk = Application.minSdk
+        targetSdk = Application.targetSdk
     }
 }
